@@ -24,20 +24,49 @@ interface IMessageHandler {
             success-> {
                 Log.d(MsgTAG, "onMessageHandler: success")
                 //TODO 处理成功
+                onSuccess(jsonObject)
             }
             error-> {
                 Log.d(MsgTAG, "onMessageHandler: error")
                 //TODO 处理失败
+                onError(jsonObject)
             }
-            hangup-> Log.d(MsgTAG, "onMessageHandler: hangup")
-            detached-> Log.d(MsgTAG, "onMessageHandler: detached")
-            event-> Log.d(MsgTAG, "onMessageHandler: event")
-            trickle-> Log.d(MsgTAG, "onMessageHandler: trickle")
-            destroy-> Log.d(MsgTAG, "onMessageHandler: detroy")
+            hangup-> {
+                Log.d(MsgTAG, "onMessageHandler: hangup")
+                onHangUp(jsonObject)
+            }
+            detached-> {
+                Log.d(MsgTAG, "onMessageHandler: detached")
+                onDetached(jsonObject)
+            }
+            event-> {
+                Log.d(MsgTAG, "onMessageHandler: event")
+                onEvent(jsonObject)
+            }
+            trickle-> {
+                Log.d(MsgTAG, "onMessageHandler: trickle")
+                onTrickle(jsonObject)
+            }
+            destroy-> {
+                Log.d(MsgTAG, "onMessageHandler: detroy")
+                onDestroy(jsonObject)
+            }
         }
     }
 
-    fun onKeepAlive(jsonObject: JSONObject): Any {
-        TODO("Not yet implemented")
-    }
+    fun onDestroy(jsonObject: JSONObject)
+
+    fun onTrickle(jsonObject: JSONObject)
+
+    fun onDetached(jsonObject: JSONObject)
+
+    fun onHangUp(jsonObject: JSONObject)
+
+    fun onEvent(jsonObject: JSONObject)
+
+    fun onError(jsonObject: JSONObject)
+
+    fun onSuccess(jsonObject: JSONObject)
+
+    fun onKeepAlive(jsonObject: JSONObject): Any
 }

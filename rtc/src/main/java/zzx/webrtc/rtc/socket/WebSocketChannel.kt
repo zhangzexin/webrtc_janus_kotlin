@@ -11,12 +11,12 @@ abstract class WebSocketChannel: IMessageHandler {
     val TAG: String = "WebSocket"
     var mHandler: Handler
     var mWebSocket: WebSocket? = null
-
+    var isConnection = false
     constructor() {
         mHandler = Handler()
     }
 
-    fun initConnection(url: String) {
+    internal fun initConnection(url: String) {
         val okHttpClient = OkHttpClient.Builder()
             .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addInterceptor(object : Interceptor {
@@ -32,6 +32,7 @@ abstract class WebSocketChannel: IMessageHandler {
         val request = Request.Builder().url(url).build()
         mWebSocket = okHttpClient.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
+                isConnection = true
                 Log.e(TAG, "onOpen")
                 createSession()
             }
@@ -58,6 +59,8 @@ abstract class WebSocketChannel: IMessageHandler {
                 code: Int,
                 reason: String
             ) {
+                Log.d(TAG, "onClosed: "+ reason)
+                isConnection = false
             }
 
             override fun onFailure(
@@ -65,10 +68,24 @@ abstract class WebSocketChannel: IMessageHandler {
                 t: Throwable,
                 response: Response?
             ) {
-                Log.e(TAG, "onFailure$t")
+                isConnection = false
+                Log.e(TAG, "onFailure:$t")
             }
         })
     }
+
+    fun sendMessage(msg: String) {
+        if (isConnection) {
+            Log.d(TAG, "sendMessage: " + msg)
+            mWebSocket?.send(msg)
+        }
+    }
+
+    fun close() {
+        mWebSocket?.close(1000,"janus close")
+        mWebSocket = null
+    }
+
 
     abstract fun createSession();
 
