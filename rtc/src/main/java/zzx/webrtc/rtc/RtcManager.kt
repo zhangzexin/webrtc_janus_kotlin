@@ -1,6 +1,6 @@
 package zzx.webrtc.rtc
 
-abstract class RtcManager private constructor(){
+abstract class RtcManager{
 
    companion object {
        val instance: RtcManager by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {

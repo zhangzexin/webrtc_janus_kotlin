@@ -68,5 +68,5 @@ interface IMessageHandler {
 
     fun onSuccess(jsonObject: JSONObject)
 
-    fun onKeepAlive(jsonObject: JSONObject): Any
+    fun onKeepAlive(jsonObject: JSONObject)
 }

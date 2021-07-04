@@ -1,4 +1,4 @@
-package zzx.webrtc.rtc.`interface`
+package zzx.webrtc.rtc.interfaces
 
 import org.webrtc.SessionDescription
 

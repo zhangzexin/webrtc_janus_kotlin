@@ -9,12 +9,8 @@ import java.util.concurrent.TimeUnit
 
 abstract class WebSocketChannel: IMessageHandler {
     val TAG: String = "WebSocket"
-    var mHandler: Handler
     var mWebSocket: WebSocket? = null
     var isConnection = false
-    constructor() {
-        mHandler = Handler()
-    }
 
     internal fun initConnection(url: String) {
         val okHttpClient = OkHttpClient.Builder()
@@ -74,7 +70,7 @@ abstract class WebSocketChannel: IMessageHandler {
         })
     }
 
-    fun sendMessage(msg: String) {
+    open fun sendMessage(msg: String) {
         if (isConnection) {
             Log.d(TAG, "sendMessage: " + msg)
             mWebSocket?.send(msg)

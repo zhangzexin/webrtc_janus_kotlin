@@ -2,11 +2,12 @@ package zzx.webrtc.rtc.socket
 
 import android.content.Context
 import org.webrtc.*
-import zzx.webrtc.rtc.`interface`.IAnswerListener
+import zzx.webrtc.rtc.interfaces.IAnswerListener
+import zzx.webrtc.rtc.interfaces.ILocalDescription
 
-class PeerClient {
+open class PeerHandle {
 
-
+    //先创建Offer
     fun createOffer(peerconnection: PeerConnection) {
         val mediaConstraints = MediaConstraints()
         peerconnection.createOffer(object : SdpObserver {
@@ -166,5 +167,29 @@ class PeerClient {
                 TODO("Not yet implemented")
             }
         },mediaConstraints)
+    }
+
+    /**
+     * 创建本地PeerConection,建链。
+     */
+    fun createLocalSdp(peerconnection: PeerConnection, sdp: String, localDescription: ILocalDescription) {
+        peerconnection.setRemoteDescription(object: SdpObserver{
+            override fun onCreateSuccess(p0: SessionDescription?) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onSetSuccess() {
+                localDescription.onAddStream()
+            }
+
+            override fun onCreateFailure(error: String?) {
+                error?.let { localDescription.onFailuer(it) }
+            }
+
+            override fun onSetFailure(error: String?) {
+                error?.let { localDescription.onFailuer(it) }
+            }
+
+        }, SessionDescription(SessionDescription.Type.ANSWER,sdp))
     }
 }
